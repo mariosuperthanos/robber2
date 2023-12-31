@@ -1,0 +1,45 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string.h>
+using namespace std;
+
+class Solution {
+public:
+  //functia robber rezolva problema https://leetcode.com/problems/house-robber/description/ prin memoization(e 100 corect pt ca am puso pe leetcode si e corect)
+  int robber(vector<int> nums,vector<int>& memo,int n){
+    // verificare
+    if(memo[n]!=-1){
+      return memo[n];
+    }
+    int result;
+    // base case
+    if(n==0 ){
+      result=nums[0];
+    }else if(n==1){
+      result=max(nums[0],nums[1]);
+    }else{// il calculam
+      result=max(nums[n]+robber(nums,memo,n-2),robber(nums,memo,n-1));
+    }
+    memo[n]=result;
+    return memo[n];
+  }// functia asta rezolva problema https://leetcode.com/problems/house-robber-ii/description/
+  int rob(vector<int>& nums){
+    int m=nums.size()-1;
+    vector<int> test(m+1,-1);
+    int var=nums[m];
+    nums.pop_back();
+    int y= robber(nums,test,m-1);
+    nums.push_back(var);
+    nums.erase(nums.begin());
+    int x= robber(nums,test,m);
+    return max(x,y);
+  }
+};
+int main() {
+  Solution sol;
+  vector<int> nums = {2,3,2};
+  int result = sol.rob(nums);
+  cout << "Maximum amount that can be robbed: " << result << std::endl;
+  return 0;
+}
